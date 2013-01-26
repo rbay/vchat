@@ -4,12 +4,12 @@ class VchatController < ApplicationController
         api_secret = "5f88a4d72917d94131c7bdb0d8bb0e8b0108c12d"  # Replace with your OpenTok API secret.
 
         if stream = Stream.first
-        	p '#######'
-        	p stream
-	        p @session = stream.stream_session_id
-	        	    	opentok = OpenTok::OpenTokSDK.new(@api_key, api_secret)
+        	# p '#######'
+        	# p stream
+	        # p @session = stream.stream_session_id
+	        # 	    	opentok = OpenTok::OpenTokSDK.new(@api_key, api_secret)
 
-	        p @token = opentok.generate_token(:session_id => @session)
+	        # p @token = opentok.generate_token(:session_id => @session)
 
 	    else
 	    	p '************'

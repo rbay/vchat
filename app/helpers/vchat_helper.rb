@@ -1,0 +1,2 @@
+module VchatHelper
+end

@@ -16,10 +16,7 @@
  	margin: 0 auto;
  }
 
- #publishLink, #unpublishLink, #session_id, #connect_container, #joinStream{
+ #publishLink, #unpublishLink, #session_id, #connect_container{
  	display: none;
  }
 
- #joinStream{
- 	float: left;
- }

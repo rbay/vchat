@@ -1,6 +1,6 @@
 <script type="text/javascript" charset="utf-8">
 		var apiKey = "<%= @api_key %>";
-	    var sessionId = "<%= @session %>";
+	    var sessionId = "<%= @session.to_s %>";
 	    var token = "<%= @session_token %>";	
 
 	 // var apiKey = "22676642";
@@ -43,11 +43,8 @@
 		see http://www.tokbox.com/opentok/build/tutorials/helloworld.html#localTest
 		*/
 		function connect() {
-			session.connect(apiKey, token);
-			show('publishLink');
-			hide('unpublishLink');
-			show('session_id');
-			show('joinStream');
+			session.connect(apiKey, token);	
+
 		}
 
 		function disconnect() {
@@ -94,6 +91,8 @@
 			show('disconnectLink');
 			show('publishLink');
 			hide('connectLink');
+			show('session_id');
+			show('joinStream');
 		}
 
 		function streamCreatedHandler(event) {
@@ -161,6 +160,17 @@
 		function hide(id) {
 			document.getElementById(id).style.display = 'none';
 		}
+	$(document).ready(function(){
+		$(".join_chat").click(function(){
+			if ($(".chat_id").val().length === 0){
+				alert("Enter chat id");
+			}else{
+				window.location.href = "/vchat?stream=" + $(".chat_id").val();
+			}
+						return false;
+
+		});
+	});
         
 </script>
 	<div class="v-chat">
@@ -168,11 +178,11 @@
 		<div id="links">
 	       	<input type="button" value="Connect to Vchat" id ="connectLink" onClick="javascript:connect()" />
 	       	<input type="button" value="Disconnect" id ="disconnectLink" onClick="javascript:disconnect()" /><br/><br/>
+	        <input type="button" value="Join a chat" id ="joinStream" onClick="javascript:joinStream()" /><br/>
+	       	<span id="connect_container"><label>Enter the chat id:</label><input type="text" class="chat_id"/><a class="join_chat" href=<%= "/vchat?stream=" + @s.id.to_s %> placeholder="Enter your friend's connection id">Go</a></span>	       	
 	       	<input type="button" value="Start Publishing" id ="publishLink" onClick="javascript:startPublishing()" />
-	       	<input type="button" value="Join a friend" id ="joinStream" onClick="javascript:joinStream()" />
-	       	<span id="connect_container"><input type="text" /><a href=<%= "/vchat?stream=" + @s.id.to_s %> placeholder="Enter your friend's connection id">Enter</a></span><br/>
 	       	<input type="button" value="Stop Publishing" id ="unpublishLink" onClick="javascript:stopPublishing()" />
-	       	<p id="session_id">You connection id for your partner is <%= @s.id %></p>
+	       	<p id="session_id">Your chat id is <%= @s.id %></p>
 		</div>
 		<div id="myCamera" class="publisherContainer"></div>
 		<div id="subscribers"></div>

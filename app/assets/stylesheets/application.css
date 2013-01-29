@@ -11,3 +11,15 @@
  *= require_self
  *= require_tree .
  */
+
+ .v-chat{
+ 	margin: 0 auto;
+ }
+
+ #publishLink, #unpublishLink, #session_id, #connect_container, #joinStream{
+ 	display: none;
+ }
+
+ #joinStream{
+ 	float: left;
+ }

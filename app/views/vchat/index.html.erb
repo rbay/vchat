@@ -1,11 +1,11 @@
 <script type="text/javascript" charset="utf-8">
-		// var apiKey = "<%= @api_key %>";
-	 //    var sessionId = "<%= @session %>";
-	 //    var token = "<%= @token %>";	
+		var apiKey = "<%= @api_key %>";
+	    var sessionId = "<%= @session %>";
+	    var token = "<%= @session_token %>";	
 
-	 var apiKey = "22676642";
-	    var sessionId = "2_MX4yMjY3NjY0Mn4xMjcuMC4wLjF-U2F0IEphbiAyNiAxMDoyNzowNSBQU1QgMjAxM34yLjcyNjMxNjVFLTR-";
-	    var token = "T1==cGFydG5lcl9pZD0yMjY3NjY0MiZzaWc9M2Q2NzQ2ZDIyMmIxYTU4YjQxMGUwMzEyZmE4MDU2NjlhMmVlMWI2NTpyb2xlPXB1Ymxpc2hlciZzZXNzaW9uX2lkPTJfTVg0eU1qWTNOalkwTW40eE1qY3VNQzR3TGpGLVUyRjBJRXBoYmlBeU5pQXhNRG95Tnpvd05TQlFVMVFnTWpBeE0zNHlMamN5TmpNeE5qVkZMVFItJmNyZWF0ZV90aW1lPTEzNTkyMjU2NTAmbm9uY2U9MC4zMjYwMjY1NzIzODA1MDAxNQ==";	
+	 // var apiKey = "22676642";
+	    // var sessionId = "2_MX4yMjY3NjY0Mn4xMjcuMC4wLjF-TW9uIEphbiAyOCAxOTowMzo0OSBQU1QgMjAxM34wLjc3MjM5Mzd-";
+	    // var token = "T1==cGFydG5lcl9pZD0yMjY3NjY0MiZzaWc9ZDRjYjQ2NTdhNmQyODcwOTY3OTU0ZjMyYTg0OTA1ZTA5MzhjN2M3Njpyb2xlPXB1Ymxpc2hlciZzZXNzaW9uX2lkPTJfTVg0eU1qWTNOalkwTW40eE1qY3VNQzR3TGpGLVRXOXVJRXBoYmlBeU9DQXhPVG93TXpvME9TQlFVMVFnTWpBeE0zNHdMamMzTWpNNU16ZC0mY3JlYXRlX3RpbWU9MTM1OTQyODYyOSZub25jZT0wLjA5MTIzMDA1NDc3NTczMzI=";	
 		
 		var session;
 		var publisher;
@@ -44,6 +44,10 @@
 		*/
 		function connect() {
 			session.connect(apiKey, token);
+			show('publishLink');
+			hide('unpublishLink');
+			show('session_id');
+			show('joinStream');
 		}
 
 		function disconnect() {
@@ -146,6 +150,10 @@
 			subscribers[stream.streamId] = session.subscribe(stream, subscriberDiv.id, subscriberProps);
 		}
 
+		function joinStream(){
+			$("#connect_container").show();
+		}
+
 		function show(id) {
 			document.getElementById(id).style.display = 'block';
 		}
@@ -154,16 +162,21 @@
 			document.getElementById(id).style.display = 'none';
 		}
         
-	</script>
-	<div id="opentok_console"></div>
-	<div id="links">
-       	<input type="button" value="Connect" id ="connectLink" onClick="javascript:connect()" />
-       	<input type="button" value="Leave" id ="disconnectLink" onClick="javascript:disconnect()" />
-       	<input type="button" value="Start Publishing" id ="publishLink" onClick="javascript:startPublishing()" />
-       	<input type="button" value="Stop Publishing" id ="unpublishLink" onClick="javascript:stopPublishing()" />
+</script>
+	<div class="v-chat">
+		<div id="opentok_console"></div>
+		<div id="links">
+	       	<input type="button" value="Connect to Vchat" id ="connectLink" onClick="javascript:connect()" />
+	       	<input type="button" value="Disconnect" id ="disconnectLink" onClick="javascript:disconnect()" /><br/><br/>
+	       	<input type="button" value="Start Publishing" id ="publishLink" onClick="javascript:startPublishing()" />
+	       	<input type="button" value="Join a friend" id ="joinStream" onClick="javascript:joinStream()" />
+	       	<span id="connect_container"><input type="text" /><a href=<%= "/vchat?stream=" + @s.id.to_s %> placeholder="Enter your friend's connection id">Enter</a></span><br/>
+	       	<input type="button" value="Stop Publishing" id ="unpublishLink" onClick="javascript:stopPublishing()" />
+	       	<p id="session_id">You connection id for your partner is <%= @s.id %></p>
+		</div>
+		<div id="myCamera" class="publisherContainer"></div>
+		<div id="subscribers"></div>
+		<script type="text/javascript" charset="utf-8">
+			show('connectLink');
+		</script>
 	</div>
-	<div id="myCamera" class="publisherContainer"></div>
-	<div id="subscribers"></div>
-	<script type="text/javascript" charset="utf-8">
-		show('connectLink');
-	</script>

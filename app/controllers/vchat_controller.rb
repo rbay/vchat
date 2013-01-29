@@ -12,13 +12,18 @@ class VchatController < ApplicationController
 	        # p @token = opentok.generate_token(:session_id => @session)
 
 	    # else
-	    	p '************'
-	    	opentok = OpenTok::OpenTokSDK.new(@api_key, api_secret)
-	        session_properties = {OpenTok::SessionPropertyConstants::P2P_PREFERENCE => "enabled"}
-	        p @session = opentok.create_session(request.remote_addr, session_properties)
-	        @token = opentok.generate_token(:session_id => @session)
-	        # p s = Stream.new(:stream_session_id => @session.session_id, :token =>@token)
-	        # p s.save
+
+	        if params[:stream]
+	        	@session = Stream.find(params[:stream]).stream_session_id.to_s
+	        	@session_token = Stream.find(params[:stream]).session_token
+	        else
+	        	opentok = OpenTok::OpenTokSDK.new(@api_key, api_secret)
+	        	session_properties = {OpenTok::SessionPropertyConstants::P2P_PREFERENCE => "enabled"}
+	        	@session = opentok.create_session(request.remote_addr, session_properties)
+	        	test= @session.session_id
+	        	@session_token = opentok.generate_token(:session_id => @session)
+	        end
+	        p @s = Stream.create(:stream_session_id => test, :session_token =>@session_token.to_s)
 	   	# end
     end
 end

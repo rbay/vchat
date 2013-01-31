@@ -173,15 +173,29 @@
 	});
         
 </script>
+<div class="container-narrow">
+
+  <div class="masthead">
+    <ul class="nav nav-pills pull-right">
+      <li class="active"><a href="#">Home</a></li>
+      <li><a href="#">About</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+    <h3 class="muted">V-Chat</h3>
+  </div>
+
+  <hr>
+
+  <div class="jumbotron">
 	<div class="v-chat">
 		<div id="opentok_console"></div>
 		<div id="links">
-	       	<input type="button" value="Connect to Vchat" id ="connectLink" onClick="javascript:connect()" />
-	       	<input type="button" value="Disconnect" id ="disconnectLink" onClick="javascript:disconnect()" /><br/><br/>
-	        <input type="button" value="Join a chat" id ="joinStream" onClick="javascript:joinStream()" /><br/>
-	       	<span id="connect_container"><label>Enter the chat id:</label><input type="text" class="chat_id"/><a class="join_chat" href=<%= "/vchat?stream=" + @s.id.to_s %> placeholder="Enter your friend's connection id">Go</a></span>	       	
-	       	<input type="button" value="Start Publishing" id ="publishLink" onClick="javascript:startPublishing()" />
-	       	<input type="button" value="Stop Publishing" id ="unpublishLink" onClick="javascript:stopPublishing()" />
+	       	<input class="btn btn-large btn-success" type="button" value="Connect to Vchat" id ="connectLink" onClick="javascript:connect()" /><br/><br/>
+	       	<input class="btn btn-large btn-danger" type="button" value="Disconnect" id ="disconnectLink" onClick="javascript:disconnect()" /><br/><br/>
+	        <input class="btn btn-large btn-success" type="button" value="Join a chat" id ="joinStream" onClick="javascript:joinStream()" /><br/><br/>
+	       	<span id="connect_container"><label>Enter the chat id:</label><input type="text" class="chat_id"/><a class="join_chat" href=<%= "/vchat?stream=" + @s.id.to_s %> placeholder="Enter your friend's connection id">Go</a></span><br/>	       	
+	       	<input class="btn btn-large btn-success" type="button" value="Start Publishing" id ="publishLink" onClick="javascript:startPublishing()" />
+	       	<input class="btn btn-large btn-danger" type="button" value="Stop Publishing" id ="unpublishLink" onClick="javascript:stopPublishing()" /><br/>
 	       	<p id="session_id">Your chat id is <%= @s.id %></p>
 		</div>
 		<div id="myCamera" class="publisherContainer"></div>
@@ -190,3 +204,16 @@
 			show('connectLink');
 		</script>
 	</div>
+  </div>
+ 
+  <div class="clearfix"> </div>
+
+  <hr>
+
+	<div id="footer">
+	  <div class="container">
+	    <p class="muted credit">VCHAT - 2012</p>
+	  </div>
+	</div>
+</div>
+	

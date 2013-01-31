@@ -23,7 +23,7 @@ class VchatController < ApplicationController
 	        	test= @session.session_id
 	        	@session_token = opentok.generate_token(:session_id => @session)
 	        end
-	        p @s = Stream.create(:stream_session_id => test, :session_token =>@session_token.to_s)
+	        @s = Stream.create(:stream_session_id => test, :session_token =>@session_token.to_s)
 	   	# end
     end
 end

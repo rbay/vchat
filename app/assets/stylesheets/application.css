@@ -15,12 +15,14 @@
 body {
 padding-top: 20px;
 padding-bottom: 40px;
+background: #f6f6f6 url(../assets/body.png) repeat;
 }
 
 /* Custom container */
 .container-narrow {
-margin: 0 auto;
-max-width: 700px;
+margin: 35px auto;
+max-width: 960px;
+min-height: 800px;
 }
 .container-narrow > hr {
 margin: 30px 0;
@@ -59,3 +61,8 @@ margin-top: 28px;
  	width: 200px;
  	float: left;
  }
+ .btn, .well{
+ 	border-radius: 0px;
+ }
+
+

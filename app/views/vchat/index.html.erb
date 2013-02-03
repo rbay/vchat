@@ -57,6 +57,7 @@
 		// Called when user wants to start publishing to the session
 		function startPublishing() {
 			if (!publisher) {
+				$("#myCamera").html("");
 				var parentDiv = document.getElementById("myCamera");
 				var publisherDiv = document.createElement('div'); // Create a div for the publisher to replace
 				publisherDiv.setAttribute('id', 'opentok_publisher');
@@ -93,6 +94,7 @@
 			hide('connectLink');
 			show('session_id');
 			show('joinStream');
+			startPublishing();
 		}
 
 		function streamCreatedHandler(event) {
@@ -170,50 +172,74 @@
 						return false;
 
 		});
+		connect();
 	});
         
 </script>
-<div class="container-narrow">
-
-  <div class="masthead">
-    <ul class="nav nav-pills pull-right">
-      <li class="active"><a href="#">Home</a></li>
-      <li><a href="#">About</a></li>
-      <li><a href="#">Contact</a></li>
-    </ul>
-    <h3 class="muted">V-Chat</h3>
-  </div>
-
-  <hr>
-
-  <div class="jumbotron">
-	<div class="v-chat">
-		<div id="opentok_console"></div>
-		<div id="links">
-	       	<input class="btn btn-large btn-success" type="button" value="Connect to Vchat" id ="connectLink" onClick="javascript:connect()" /><br/><br/>
-	       	<input class="btn btn-large btn-danger" type="button" value="Disconnect" id ="disconnectLink" onClick="javascript:disconnect()" /><br/><br/>
-	        <input class="btn btn-large btn-success" type="button" value="Join a chat" id ="joinStream" onClick="javascript:joinStream()" /><br/><br/>
-	       	<span id="connect_container"><label>Enter the chat id:</label><input type="text" class="chat_id"/><a class="join_chat" href=<%= "/vchat?stream=" + @s.id.to_s %> placeholder="Enter your friend's connection id">Go</a></span><br/>	       	
-	       	<input class="btn btn-large btn-success" type="button" value="Start Publishing" id ="publishLink" onClick="javascript:startPublishing()" />
-	       	<input class="btn btn-large btn-danger" type="button" value="Stop Publishing" id ="unpublishLink" onClick="javascript:stopPublishing()" /><br/>
-	       	<p id="session_id">Your chat id is <%= @s.id %></p>
-		</div>
-		<div id="myCamera" class="publisherContainer"></div>
-		<div id="subscribers"></div>
-		<script type="text/javascript" charset="utf-8">
-			show('connectLink');
-		</script>
-	</div>
-  </div>
- 
+<div class="navbar navbar-fixed-top">
+   <div class="navbar-inner">
+     <div class="container">
+       <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+         <span class="icon-bar"></span>
+         <span class="icon-bar"></span>
+         <span class="icon-bar"></span>
+       </a>
+       <a class="brand" href="../">V - CHAT</a>
+       <div class="nav-collapse" id="main-menu">
+        <ul class="nav pull-right" id="main-menu-right">
+          <li><a onclick="pageTracker._link(this.href); return false;">Home</a></li>
+          <li><a id="swatch-link" href="/#gallery">About</a></li>
+          <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Contact</a>
+          </li>
+        </ul>
+       </div>
+     </div>
+   </div>
+</div>
   <div class="clearfix"> </div>
 
-  <hr>
-
-	<div id="footer">
-	  <div class="container">
-	    <p class="muted credit">VCHAT - 2012</p>
+<div class="container-narrow row-fluid">
+  	<div class="span8">
+	  <div class="jumbotron">
+		<div class="v-chat">
+			<div id="opentok_console"></div>
+			<div id="links">
+		       	<input class="btn btn-large btn-success" type="button" value="Connecting..." id ="connectLink" onClick="javascript:connect()" /><br/><br/>
+		       	<input class="btn btn-large btn-danger" type="button" value="Disconnect" id ="disconnectLink" onClick="javascript:disconnect()" /><br/><br/>
+		        <input class="btn btn-large btn-success" type="button" value="Join a chat" id ="joinStream" onClick="javascript:joinStream()" /><br/><br/>
+		       	<span id="connect_container"><label>Enter the chat id:</label><input type="text" class="chat_id"/><a class="join_chat" href=<%= "/vchat?stream=" + @s.id.to_s %> placeholder="Enter your friend's connection id">Go</a></span><br/>	       	
+		       	<input class="btn btn-large btn-success" type="button" value="Start Publishing" id ="publishLink" onClick="javascript:startPublishing()" />
+		       	<input class="btn btn-large btn-danger" type="button" value="Stop Publishing" id ="unpublishLink" onClick="javascript:stopPublishing()" /><br/>
+		       	<p id="session_id">Your chat id is <%= @s.id %></p>
+			</div>
+			<div id="myCamera" class="publisherContainer">Connecting to V-CHAT. Please wait...</div>
+			<div id="subscribers"></div>
+			<script type="text/javascript" charset="utf-8">
+				show('connectLink');
+			</script>
+		</div>
 	  </div>
 	</div>
+
+	<div class="span4">      
+      <h3 id="list">Text Chat</h3>
+        
+      <div class="well" style="padding: 8px 0;">
+        <ul class="nav nav-list">
+          <li class="nav-header">Coming soon..</li>
+          <li class="active"><a href="#">Home</a></li>
+        </ul>
+      </div>
+    </div>
+ 
+  <div class="clearfix"> </div>
+  <hr>
+</div>
+
+<div id="footer">
+  <div class="container">
+    <p class="muted credit">© V - CHAT 2013.</p>
+  </div>
 </div>
 	

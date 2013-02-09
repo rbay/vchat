@@ -1,4 +1,5 @@
 <script type="text/javascript" charset="utf-8">
+	<% if params[:name] %>
 		var apiKey = "<%= @api_key %>";
 	    var sessionId = "<%= @session.to_s %>";
 	    var token = "<%= @session_token %>";	
@@ -56,6 +57,7 @@
 
 		// Called when user wants to start publishing to the session
 		function startPublishing() {
+			console.log(session);
 			if (!publisher) {
 				$("#myCamera").html("");
 				var parentDiv = document.getElementById("myCamera");
@@ -95,7 +97,22 @@
 			show('session_id');
 			show('joinStream');
 			startPublishing();
+			var stateManager = session.getStateManager();
+			stateManager.addEventListener("changed", stateChangedHandler);
 		}
+
+		function stateChangedHandler(event) {
+			console.log(event);
+		    for (key in event.changedValues) {
+		        // alert("Changed state. Key: " + key + ". Value: " + event.changedValues[key]);
+		        console.log($(".chat nav-list"));
+		        $(".chat .nav-list").append("<li style='padding: 10px 0'><span style='color: #2fa4e7'>" + key + ":</span>" + event.changedValues[key] +"</li>").promise().done(function() {
+				    $('.chat .nav').animate({
+         				scrollTop: $(".chat .nav li:last").offset().top
+     				}, 1000);
+				});
+		    }
+		}		
 
 		function streamCreatedHandler(event) {
 			// Subscribe to the newly created streams
@@ -162,18 +179,63 @@
 		function hide(id) {
 			document.getElementById(id).style.display = 'none';
 		}
-	$(document).ready(function(){
-		$(".join_chat").click(function(){
-			if ($(".chat_id").val().length === 0){
-				alert("Enter chat id");
-			}else{
-				window.location.href = "/vchat?stream=" + $(".chat_id").val();
-			}
-						return false;
+	<% end %>
+		$(document).ready(function(){
+			$(".join_chat").click(function(){
+				if ($(".chat_id").val().length === 0){
+					alert("Enter chat id");
+				}else{
+					window.location.href = "/vchat?stream=" + $(".chat_id").val() + "&name=" + "<%= params[:name] %>" + "&age=" + "<%= params[:age] %>" + "&gender=" + "<%= params[:gender] %>" + "&bio=" + "<%= params[:bio] %>";				
+				}
+				return false;
+			});
 
+			$(".chat-form").submit(function(e){
+				e.preventDefault();
+				var txt = $(".chat-input").val();
+				var stateManager = session.getStateManager();
+				var user = "<%= params[:name] %>";
+				stateManager.set(user, txt);
+				$(".chat-input").val("");
+				return false;
+			});
+			<% if !params[:name] %>
+				$('#infoModal').modal('show');
+			<% else %>
+				connect();
+			<% end %>
+
+			// Popover 
+			$('#infoForm input').focus(function(){
+				$(this).popover('show');	
+			}).blur(function(){
+				$(this).popover('hide');	
+			});
+
+			// Validation
+			$("#infoForm").validate({
+				rules:{
+					name:{required:true},
+					age:{required:true},
+					bio:{required:true}
+				},
+				messages:{
+					user_name:{ required:"Enter your name" },
+					age:{ required:"Enter your age" },
+					bio:{ required:"Enter your bio"}
+				},
+
+				errorClass: "help-inline",
+				errorElement: "span",
+				highlight:function(element, errorClass, validClass){
+					$(element).parents('.control-group').addClass('error');
+				},
+				unhighlight: function(element, errorClass, validClass){
+					$(element).parents('.control-group').removeClass('error');
+					$(element).parents('.control-group').addClass('success');
+				}
+			});		
 		});
-		connect();
-	});
         
 </script>
 <div class="navbar navbar-fixed-top">
@@ -199,42 +261,74 @@
 </div>
   <div class="clearfix"> </div>
 
-<div class="container-narrow row-fluid">
-  	<div class="span8">
-	  <div class="jumbotron">
-		<div class="v-chat">
-			<div id="opentok_console"></div>
-			<div id="links">
-		       	<input class="btn btn-large btn-success" type="button" value="Connecting..." id ="connectLink" onClick="javascript:connect()" /><br/><br/>
-		       	<input class="btn btn-large btn-danger" type="button" value="Disconnect" id ="disconnectLink" onClick="javascript:disconnect()" /><br/><br/>
-		        <input class="btn btn-large btn-success" type="button" value="Join a chat" id ="joinStream" onClick="javascript:joinStream()" /><br/><br/>
-		       	<span id="connect_container"><label>Enter the chat id:</label><input type="text" class="chat_id"/><a class="join_chat" href=<%= "/vchat?stream=" + @s.id.to_s %> placeholder="Enter your friend's connection id">Go</a></span><br/>	       	
-		       	<input class="btn btn-large btn-success" type="button" value="Start Publishing" id ="publishLink" onClick="javascript:startPublishing()" />
-		       	<input class="btn btn-large btn-danger" type="button" value="Stop Publishing" id ="unpublishLink" onClick="javascript:stopPublishing()" /><br/>
-		       	<p id="session_id">Your chat id is <%= @s.id %></p>
+<% if params[:name] %>
+	<div class="container-narrow row-fluid">
+	  	<div class="span8">
+		  <div class="jumbotron">
+			<div class="v-chat">
+				<div id="opentok_console"></div>
+				<div id="links">
+			       	<input class="btn btn-large btn-success" type="button" value="Connecting..." id ="connectLink" onClick="javascript:connect()" /><br/><br/>
+			       	<input class="btn btn-large btn-danger" type="button" value="Disconnect" id ="disconnectLink" onClick="javascript:disconnect()" /><br/><br/>
+			        <input class="btn btn-large btn-success" type="button" value="Join a chat" id ="joinStream" onClick="javascript:joinStream()" /><br/><br/>
+			       	<span id="connect_container"><label>Enter the chat id:</label><input type="text" class="chat_id"/><a class="join_chat" href=<%= "/vchat?stream=" + @s.id.to_s + "&name=" + params[:name] + "&age=" + params[:age] + "&gender=" + params[:gender] + "&bio=" + params[:bio] %> placeholder="Enter your friend's connection id">Go</a></span><br/>	       	
+			       	<input class="btn btn-large btn-success" type="button" value="Start Publishing" id ="publishLink" onClick="javascript:startPublishing()" />
+			       	<input class="btn btn-large btn-danger" type="button" value="Stop Publishing" id ="unpublishLink" onClick="javascript:stopPublishing()" /><br/>
+			       	<p id="session_id">Your chat id is <%= @s.id %></p>
+				</div>
+				<div id="myCamera" class="publisherContainer">Connecting to V-CHAT. Please wait...</div>
+				<div id="subscribers"></div>
+				<script type="text/javascript" charset="utf-8">
+					show('connectLink');
+				</script>
 			</div>
-			<div id="myCamera" class="publisherContainer">Connecting to V-CHAT. Please wait...</div>
-			<div id="subscribers"></div>
-			<script type="text/javascript" charset="utf-8">
-				show('connectLink');
-			</script>
+		  </div>
 		</div>
-	  </div>
-	</div>
 
-	<div class="span4">      
-      <h3 id="list">Text Chat</h3>
-        
-      <div class="well" style="padding: 8px 0;">
-        <ul class="nav nav-list">
-          <li class="nav-header">Coming soon..</li>
-          <li class="active"><a href="#">Home</a></li>
-        </ul>
-      </div>
-    </div>
- 
-  <div class="clearfix"> </div>
-  <hr>
+		<div class="span4" style="margin-top: 60px;">         
+		  <p>Welcome <%= params[:name] %></p>     
+	      <div style="padding: 8px 0;height: 400px;background-color: #ffffff">
+	        <ul class="nav nav-list">
+	          <li class="nav-header">Text Chat</li>
+	        </ul>
+	        <div class="chat" style="padding: 8px 0;height: 300px;">
+		        <ul class="nav nav-list">
+		        </ul>
+	        </div>
+	        <form class="navbar-search chat-form" style="margin: 0 44px;">
+	  			<input type="text" class="chat-input"/>
+			</form>
+	      </div>
+	    </div>
+	 
+	  <div class="clearfix"> </div>
+	  <hr>
+	</div>
+<% end %>
+
+<div id="infoModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="infoModalLabel" aria-hidden="true">
+	<div class="modal-header">
+		<h3 id="myModalLabel">Your Info</h3>
+	</div>
+	<form class='form' id='infoForm'> 
+		<div class='controls'> 
+			<label class='control-label'>Name</label> 
+			<input class='input-large' type='text' name='name' id='name' rel='popover' data-content="What’s your name?" data-original-title="Name"> 
+			<div class="clearfix"> </div>
+			<label class='control-label'>Age</label> 
+			<input type='text' name='age' id='age' rel='popover' data-content="What’s your age?" data-original-title="Age">
+			<div class="clearfix"> </div>			
+			<label class='control-label'>Gender</label> 
+			<input type='text' name='gender' id='gender' rel='popover' data-content="Your gender" data-original-title="gender">			
+			<div class="clearfix"> </div>
+			<label class='control-label'>Bio</label> 
+			<input type='text' name='bio' id='bio' rel='popover' data-content="Tell something about yourself" data-original-title="Bio"> 
+			<div class="clearfix"> </div>
+			<div class="modal-footer">
+				<button class="btn btn-primary">Save</button>
+			</div>
+		</div> 
+	</form>
 </div>
 
 <div id="footer">

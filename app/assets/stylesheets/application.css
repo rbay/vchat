@@ -64,5 +64,17 @@ margin-top: 28px;
  .btn, .well{
  	border-radius: 0px;
  }
-
+#infoForm label{
+	float: left;
+	padding: 30px;
+	width: 35px;
+}
+#infoForm input{
+	margin-top: 25px;
+	width: 310px;
+}
+.chat .nav-list{
+	overflow-y: scroll;
+	height: 270px;
+}
 
